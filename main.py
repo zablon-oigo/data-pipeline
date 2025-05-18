@@ -51,3 +51,13 @@ def get_artist_top_tracks_in_kenya(token, artist_id):
     result.raise_for_status()
     json_result = result.json()["tracks"]
     return json_result
+
+
+token = get_token()
+artist = search_for_artist(token, "Simmy")
+if artist:
+    artist_id = artist["id"]
+    songs = get_artist_top_tracks_in_kenya(token, artist_id)
+
+    for idx, song in enumerate(songs):
+        print(f"{idx + 1}. {song['name']}")
