@@ -44,3 +44,10 @@ def search_for_artist(token, artist_name):
 
 
 
+def get_artist_top_tracks_in_kenya(token, artist_id):
+    url = f"https://api.spotify.com/v1/artists/{artist_id}/top-tracks?country=KE"
+    headers = get_auth_headers(token)
+    result = get(url, headers=headers)
+    result.raise_for_status()
+    json_result = result.json()["tracks"]
+    return json_result
