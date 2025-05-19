@@ -24,20 +24,12 @@ def get_token() -> str:
 def get_auth_headers(token: str) -> Dict[str, str]:
     return {"Authorization": f"Bearer {token}"}
 
-def search_for_artist(token, artist_name):
-    url = "https://api.spotify.com/v1/search"
-    headers = get_auth_headers(token)
-    query = f"?q={artist_name}&type=artist&limit=1"
-    query_url = url + query
-    result = get(query_url, headers=headers)
-    result.raise_for_status()
-    json_result = result.json()["artists"]["items"]
-    
-    if not json_result:
-        print("No artist with this name exists...")
-        return None
-
-    return json_result[0]
+def get_artist(token: str, name: str) -> Dict:
+    url = f"https://api.spotify.com/v1/search?q={name}&type=artist&limit=1"
+    resp = get(url, headers=get_auth_headers(token))
+    resp.raise_for_status()
+    artists = resp.json().get("artists", {}).get("items", [])
+    return artists[0] if artists else None
 
 
 
@@ -51,7 +43,7 @@ def get_artist_top_tracks_in_kenya(token, artist_id):
 
 
 token = get_token()
-artist = search_for_artist(token, "Simmy")
+artist = get_artist(token, "Simmy")
 if artist:
     artist_id = artist["id"]
     songs = get_artist_top_tracks_in_kenya(token, artist_id)
