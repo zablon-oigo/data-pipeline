@@ -1,6 +1,6 @@
 import base64
 import os
-from typing import Dict
+from typing import Dict, List
 
 from dotenv import load_dotenv
 from requests import get, post
@@ -45,6 +45,37 @@ def get_artist_top_tracks_in_kenya(token, artist_id):
     result.raise_for_status()
     json_result = result.json()["tracks"]
     return json_result
+
+
+def get_albums(token: str, artist_id: str) -> List[Dict]:
+    url = f"{base_url}/artists/{artist_id}/albums"
+    headers = get_auth_headers(token)
+    albums = []
+    params = {"include_groups": "album,single,compilation", "limit": 50, "offset": 0}
+
+    while True:
+        resp = get(url, headers=headers, params=params)
+        resp.raise_for_status()
+        data = resp.json()
+        items = data.get("items", [])
+
+        for album in items:
+            albums.append(
+                {
+                    "album_id": album["id"],
+                    "album_name": album["name"],
+                    "release_date": album["release_date"],
+                    "total_tracks": album["total_tracks"],
+                    "album_type": album["album_type"],
+                    "artist_id": artist_id,
+                }
+            )
+
+        if not data.get("next"):
+            break
+        params["offset"] += params["limit"]
+
+    return albums
 
 
 token = get_token()
