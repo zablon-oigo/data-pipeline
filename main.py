@@ -78,11 +78,32 @@ def get_albums(token: str, artist_id: str) -> List[Dict]:
     return albums
 
 
-token = get_token()
-artist = get_artist(token, "Simmy")
-if artist:
-    artist_id = artist["id"]
-    songs = get_artist_top_tracks_in_kenya(token, artist_id)
+def get_top_tracks_by_countries(
+    token: str, artist_id: str, countries: List[str] = None
+) -> List[Dict]:
 
-    for idx, song in enumerate(songs):
-        print(f"{idx + 1}. {song['name']}")
+    if countries is None:
+        countries = ["US", "GB", "ZA", "NG", "DE", "BR", "IN", "FR", "JP", "CA"]
+
+    headers = get_auth_headers(token)
+    all_tracks = []
+
+    for country in countries:
+        url = f"{base_url}/artists/{artist_id}/top-tracks?country={country}"
+        resp = get(url, headers=headers)
+        resp.raise_for_status()
+        tracks = resp.json()["tracks"]
+
+        for track in tracks:
+            all_tracks.append(
+                {
+                    "country": country,
+                    "track_name": track["name"],
+                    "track_id": track["id"],
+                    "popularity": track["popularity"],
+                    "album_name": track["album"]["name"],
+                    "release_date": track["album"]["release_date"],
+                }
+            )
+
+    return all_tracks
