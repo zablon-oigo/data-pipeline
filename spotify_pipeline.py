@@ -2,7 +2,13 @@ from typing import Dict, Iterator
 
 import dlt
 
-from main import get_albums, get_artist, get_token, get_top_tracks_by_countries
+from main import (
+    get_albums,
+    get_artist,
+    get_artist_top_tracks_in_kenya,
+    get_token,
+    get_top_tracks_by_countries,
+)
 
 
 @dlt.resource(name="artists")
@@ -39,3 +45,23 @@ def spotify_track_metrics_data(artist_name: str) -> Iterator[Dict]:
     tracks = get_top_tracks_by_countries(token, artist_id)
     for track in tracks:
         yield {**track}
+
+
+@dlt.resource(name="top_tracks_in_kenya")
+def spotify_top_tracks_in_kenya(artist_name: str):
+    token = get_token()
+    artist = get_artist(token, artist_name)
+    if not artist:
+        return
+
+    artist_id = artist["id"]
+    tracks = get_artist_top_tracks_in_kenya(token, artist_id)
+
+    for track in tracks:
+        yield {
+            "track_name": track["name"],
+            "popularity": track["popularity"],
+            "album_name": track["album"]["name"],
+            "track_id": track["id"],
+            "release_date": track["album"]["release_date"],
+        }
