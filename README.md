@@ -3,5 +3,6 @@
 
 ### Spotify Data Pipeline
 
+This project is a python-based data pipeline that integrates with the spotify web API to extract and analyze artist-related data. It provides functionality to search for artists by name, retrieve their top tracks in a specific country such as kenya, and load the data into a temporary database for analysis. The goal of this pipeline is to generate insights that can support data-driven business decisions, such as identifying trending artists or understanding regional music preferences.
 
 #### Architecture Diagram
