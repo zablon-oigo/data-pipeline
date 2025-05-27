@@ -7,3 +7,33 @@ This project is a python-based data pipeline that integrates with the spotify we
 
 #### Architecture Diagram
 ![elt](https://github.com/user-attachments/assets/1f915ccb-c401-45fa-b054-0a1f06db9175)
+
+#### Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/zablon-oigo/spotify-data-pipeline.git
+```
+
+Go to the project directory
+
+```bash
+  cd spotify-data-pipeline
+```
+
+Install dependencies
+
+```bash
+  pip install -r requirements.txt
+```
+
+Run Python script
+
+```bash
+  python load.py
+```
+Open the browser
+```bash
+  http://localhost:8501/dashboard
+```
